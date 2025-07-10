@@ -56,19 +56,36 @@ VOIDGATES_ZONE=
 # Access log path (Apache or Nginx)
 LOG_PATH=/opt/bitnami/apache2/logs/access_log
 
+# === 404-Based Blocking Settings ===
+
 # Number of 404s from a single IP before blocking
-BLOCK_THRESHOLD=10
+404_BLOCK_THRESHOLD=10
 
 # Time window (seconds) to trigger threshold
-BLOCK_INTERVAL_SECONDS=60
+404_BLOCK_INTERVAL_SECONDS=60
 
-# How long (in seconds) to keep the IP blocked
+# How long (in seconds) the IP should remain blocked
 # Leave blank or 0 for permanent block
-BLOCK_DURATION_SECONDS=3600
+404_BLOCK_DURATION_SECONDS=3600
 
-# How often (in seconds) to run cleanup of expired blocks
+# === Path-Based Abuse Blocking Settings ===
+
+# Number of times an IP can hit the same path before being blocked
+PATH_BLOCK_THRESHOLD=15
+
+# Time window (in seconds) in which the path threshold must be exceeded
+PATH_BLOCK_INTERVAL_SECONDS=60
+
+# How long (in seconds) the IP should remain blocked for path-based blocks
+# Leave blank or set to 0 to block permanently
+PATH_BLOCK_DURATION_SECONDS=1800
+
+# === Cleanup ===
+
+# How often (in seconds) to check for and remove expired blocks
 CLEANUP_INTERVAL_SECONDS=300
 
+# If true, the script will simulate blocks without calling the Cloudflare API
 # Useful for testing and development
 DRY_RUN=true
 ```
@@ -93,19 +110,19 @@ pm2 start voidgates-watcher
 
 ## 🧹 Expired Block Cleanup
 
-A scheduled cleanup function removes expired blocks automatically based on the `BLOCK_DURATION_SECONDS`. Only blocks added by this tool (identified by the note `VoidGates Detection - <timestamp>`) will be removed.
+A scheduled cleanup function removes expired blocks automatically based on the block duration.
+Only blocks added by this tool (identified by the note prefix) will be removed.
 
 ---
 
 ## 📄 Notes Format in Cloudflare
 
-Blocked IPs are tagged with:
+Blocked IPs are tagged with a timestamp note for cleanup:
 
 ```
-VoidGates Detection - 2025-07-09T15:32:00Z
+404 Abuse - 2025-07-09T15:32:00Z
+Path Abuse - 2025-07-09T15:32:00Z
 ```
-
-This timestamp is used to track expiration and clean up expired entries.
 
 ---
 
@@ -128,5 +145,3 @@ Then tail the file or append test entries like:
 ## 🧑‍💻 License
 
 MIT
-
----
