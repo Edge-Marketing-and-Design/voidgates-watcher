@@ -36,7 +36,20 @@ npm install
 
 ## ⚙️ Setup
 
-Create a `.env` file in the root directory or set environment variables directly.
+After installing, you'll be prompted to select a location for your config file. A `voidgates.env` file will be created there from an example template.
+
+To run the watcher, pass your config path:
+
+```bash
+node $(which voidgates-watcher) --env "/path/to/your/voidgates.env"
+```
+
+To run continuously with `pm2`:
+
+```bash
+pm2 start $(which voidgates-watcher) --name voidgates -- --env "/path/to/your/voidgates.env"
+```
+### 🛠 Example `.env` Configuration
 
 ```env
 # Cloudflare API Token must include the following permissions:
@@ -89,40 +102,10 @@ CLEANUP_INTERVAL_SECONDS=300
 # Useful for testing and development
 DRY_RUN=true
 ```
-
----
-
-## 🛠 Usage
-
-Run the watcher:
-
-```bash
-voidgates-watcher
-```
-
-To run continuously (recommended), use a process manager like `pm2` or `systemd`:
-
-```bash
-pm2 start voidgates-watcher
-```
-
----
-
 ## 🧹 Expired Block Cleanup
 
 A scheduled cleanup function removes expired blocks automatically based on the block duration.
 Only blocks added by this tool (identified by the note prefix) will be removed.
-
----
-
-## 📄 Notes Format in Cloudflare
-
-Blocked IPs are tagged with a timestamp note for cleanup:
-
-```
-VoidGates 404 Abuse - 2025-07-09T15:32:00Z
-VoidGates Path Abuse - 2025-07-09T15:32:00Z
-```
 
 ---
 
@@ -164,10 +147,21 @@ Use a mock or sample log file by setting:
 LOG_PATH=./test/access_log.txt
 ```
 
-Then tail the file or append test entries like:
+Then append test entries like:
 
 ```
 192.0.2.123 - - [09/Jul/2025:13:22:00 +0000] "GET /notreal.php HTTP/1.1" 404 512
+```
+
+---
+
+## 📄 Notes Format in Cloudflare
+
+Blocked IPs are tagged with a timestamp note for cleanup:
+
+```
+VoidGates 404 Abuse - 2025-07-09T15:32:00Z
+VoidGates Path Abuse - 2025-07-09T15:32:00Z
 ```
 
 ---
