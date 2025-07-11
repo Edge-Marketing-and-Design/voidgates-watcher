@@ -21,13 +21,13 @@ Ideal for protecting Lightsail, Apache, or Nginx servers from brute-force scanne
 ## 🚀 Installation
 
 ```bash
-npm install -g voidgates-watcher
+npm install -g @edgedev/voidgates-watcher
 ```
 
 Or clone for development:
 
 ```bash
-git clone https://github.com/your-username/voidgates-watcher.git
+git clone https://github.com/Edge-Marketing-and-Design/voidgates-watcher.git
 cd voidgates-watcher
 npm install
 ```
