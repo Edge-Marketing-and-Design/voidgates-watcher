@@ -120,9 +120,39 @@ Only blocks added by this tool (identified by the note prefix) will be removed.
 Blocked IPs are tagged with a timestamp note for cleanup:
 
 ```
-404 Abuse - 2025-07-09T15:32:00Z
-Path Abuse - 2025-07-09T15:32:00Z
+VoidGates 404 Abuse - 2025-07-09T15:32:00Z
+VoidGates Path Abuse - 2025-07-09T15:32:00Z
 ```
+
+---
+
+## 🔍 Important: Real Visitor IPs
+
+Your server must be configured to **trust the `CF-Connecting-IP` header** from Cloudflare to avoid blocking Cloudflare proxy IPs instead of real attackers.
+
+Please follow the official guide to enable real IP support:
+https://developers.cloudflare.com/fundamentals/get-started/reference/http-request-headers/#connecting-ip
+
+### Apache example:
+
+```apache
+LoadModule remoteip_module modules/mod_remoteip.so
+RemoteIPHeader CF-Connecting-IP
+```
+
+### Nginx example:
+
+```nginx
+real_ip_header CF-Connecting-IP;
+# Add each Cloudflare IP range
+set_real_ip_from 173.245.48.0/20;
+set_real_ip_from 103.21.244.0/22;
+set_real_ip_from 104.16.0.0/13;
+# ... more ranges ...
+```
+
+🔗 Full list of Cloudflare IP ranges:  
+https://www.cloudflare.com/ips/
 
 ---
 
