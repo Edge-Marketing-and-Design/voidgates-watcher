@@ -27,7 +27,7 @@ async function checkRealIPConfig() {
 
     const resolvedPath = path.resolve(confPath)
     if (!fs.existsSync(resolvedPath)) {
-      console.warn(`⚠️ Config file not found at ${resolvedPath}`)
+      console.warn(`[WARNING] Config file not found at ${resolvedPath}`)
       return
     }
 
@@ -38,10 +38,10 @@ async function checkRealIPConfig() {
       confContent.includes('real_ip_header') ||
       confContent.includes('mod_remoteip')
     ) {
-      console.log('✅ Real IP logic already appears to be configured.')
+      console.log('[SUCCESS] Real IP logic already appears to be configured.')
     } else {
-      console.warn(`⚠️  WARNING: Your server does not appear to be configured to pass the real visitor IP address.`);
-      console.warn(`   If not configured, Cloudflare proxy IPs may be blocked instead of the actual attacker IPs.`);
+      console.warn(`[WARNING] Your server does not appear to be configured to pass the real visitor IP address.`)
+      console.warn(`   If not configured, Cloudflare proxy IPs may be blocked instead of the actual attacker IPs.`)
 
       console.warn(`\n   Please follow the official guide to enable real IP support:`);
       console.warn(`   https://developers.cloudflare.com/fundamentals/get-started/reference/http-request-headers/#connecting-ip`);
@@ -62,7 +62,7 @@ async function checkRealIPConfig() {
       console.warn(`\n   Full Cloudflare IP list: https://www.cloudflare.com/ips/`);
     }
   } catch (err) {
-    console.warn('⚠️ Real IP config check failed or was skipped.', err.message)
+    console.warn(`[WARNING] Real IP config check failed or was skipped.`, err.message)
   }
 }
 
