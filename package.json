@@ -1,13 +1,13 @@
 {
   "name": "@edgedev/voidgates-watcher",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Watches access logs and blocks abusive IPs via Cloudflare",
   "bin": {
     "voidgates-watcher": "bin/voidgates-watcher.js"
   },
   "scripts": {
     "start": "node bin/voidgates-watcher.js",
-    "postinstall": "node scripts/postinstall.js"
+    "voidgates-setup": "scripts/setup.js"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
