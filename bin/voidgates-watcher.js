@@ -29,7 +29,7 @@ if (!fs.existsSync(resolvedPath)) {
 // Load env
 dotenv.config({ path: resolvedPath })
 process.env.VOIDGATES_ENV_PATH = resolvedPath
-console.log(`✅ Loaded environment from ${resolvedPath}`)
+console.log(`[SUCCESS] Loaded environment from ${resolvedPath}`)
 
 // Dynamically import and start the watcher
 const { startWatcher } = await import('../lib/watcher.js')
