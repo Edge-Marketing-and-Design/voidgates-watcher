@@ -36,19 +36,28 @@ npm install
 
 ## ⚙️ Setup
 
-After installing, you'll be prompted to select a location for your config file. A `voidgates.env` file will be created there from an example template.
+The **first time you run** the watcher, it will prompt you to select a location for your config file and fill out all required environment variables. A `voidgates.env` file will be created for you.
 
-To run the watcher, pass your config path:
+To run the watcher:
 
 ```bash
-node $(which voidgates-watcher) --env "/path/to/your/voidgates.env"
+npx voidgates-watcher
 ```
+
+To rerun the setup process at any time:
+
+```bash
+npx voidgates-watcher setup
+```
+
+> ⚠️ If you've installed it globally and your system exposes global binaries, you may also be able to run `voidgates-watcher` instead of `npx voidgates-watcher`.
 
 To run continuously with `pm2`:
 
 ```bash
-pm2 start $(which voidgates-watcher) --name voidgates -- --env "/path/to/your/voidgates.env"
+pm2 start $(which voidgates-watcher) --name voidgates
 ```
+
 ### 🛠 Example `.env` Configuration
 
 ```env
@@ -102,6 +111,9 @@ CLEANUP_INTERVAL_SECONDS=300
 # Useful for testing and development
 DRY_RUN=true
 ```
+
+---
+
 ## 🧹 Expired Block Cleanup
 
 A scheduled cleanup function removes expired blocks automatically based on the block duration.
@@ -113,7 +125,7 @@ Only blocks added by this tool (identified by the note prefix) will be removed.
 
 Your server must be configured to **trust the `CF-Connecting-IP` header** from Cloudflare to avoid blocking Cloudflare proxy IPs instead of real attackers.
 
-Please follow the official guide to enable real IP support:
+Please follow the official guide to enable real IP support:  
 https://developers.cloudflare.com/fundamentals/get-started/reference/http-request-headers/#connecting-ip
 
 ### Apache example:
@@ -162,6 +174,56 @@ Blocked IPs are tagged with a timestamp note for cleanup:
 ```
 VoidGates 404 Abuse - 2025-07-09T15:32:00Z
 VoidGates Path Abuse - 2025-07-09T15:32:00Z
+```
+
+---
+
+## 🔧 PM2 & Node Setup (Recommended for Production)
+
+### Step 1: Install NVM (Node Version Manager)
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
+
+### Step 2: Load NVM into current shell
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
+```
+
+### Step 3: Install latest LTS version of Node.js (includes npm)
+
+```bash
+nvm install --lts
+```
+
+### Step 4: Install PM2 globally using npm
+
+```bash
+npm install -g pm2
+```
+
+### Step 5: Start your app with PM2
+
+```bash
+pm2 start $(which voidgates-watcher) --name voidgates
+```
+
+### Step 6: Enable PM2 to start on system boot
+
+```bash
+pm2 startup
+```
+
+👉 Run the `sudo` command that it prints, e.g.: sudo env PATH=$PATH:/home/bitnami/.nvm/versions/node/vXX.X.X/bin pm2 startup systemd -u bitnami --hp /home/bitnami
+
+
+### Step 7: Save your PM2 process list
+
+```bash
+pm2 save
 ```
 
 ---
