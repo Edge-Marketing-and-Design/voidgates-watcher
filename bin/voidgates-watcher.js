@@ -5,13 +5,20 @@ import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
 import { spawnSync } from 'child_process'
+import { fileURLToPath } from 'url'
 
+// Get the directory of this CLI script
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// Determine path to root .env file (where VOIDGATES_ENV_PATH is stored)
 const rootEnvPath = path.resolve(process.cwd(), '.env')
 
 // If root .env doesn't exist, run setup
 if (!fs.existsSync(rootEnvPath)) {
   console.log(`[INFO] No .env found in project root. Launching setup...\n`)
-  const result = spawnSync('node', [path.resolve('./scripts/setup.js')], { stdio: 'inherit' })
+  const setupScript = path.resolve(__dirname, '../scripts/setup.js')
+  const result = spawnSync('node', [setupScript], { stdio: 'inherit' })
 
   if (result.status !== 0) {
     console.error('[ERROR] Setup failed. Exiting.')
@@ -45,9 +52,9 @@ if (!fs.existsSync(realEnvPath)) {
 dotenv.config({ path: realEnvPath })
 console.log(`[SUCCESS] Loaded environment from ${realEnvPath}`)
 
-// Optional: handle `setup` command directly
+// Handle `setup` command explicitly
 if (process.argv.includes('setup')) {
-  const setupScript = path.resolve('./scripts/setup.js')
+  const setupScript = path.resolve(__dirname, '../scripts/setup.js')
   const result = spawnSync('node', [setupScript], { stdio: 'inherit' })
   process.exit(result.status)
 }
