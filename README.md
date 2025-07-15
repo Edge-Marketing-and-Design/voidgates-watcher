@@ -4,8 +4,6 @@ A lightweight log-monitoring daemon that detects repeated 404 requests from abus
 
 Ideal for protecting Lightsail, Apache, or Nginx servers from brute-force scanners, exploit probes, and bad actors targeting non-existent files.
 
----
-
 ## ✨ Features
 
 - 🛡 Detects excessive 404s from a single IP within a time window
@@ -15,6 +13,31 @@ Ideal for protecting Lightsail, Apache, or Nginx servers from brute-force scanne
 - 🌐 Supports **global (account-wide)** or **zone-specific** blocking
 - 🧩 Environment-based configuration — easy to customize and deploy
 - 📦 Designed for server environments like Bitnami Lightsail stacks
+
+---
+
+## ⚙️ Prerequisites
+
+### 🟢 Install Node.js and npm (if not already installed)
+
+Use NVM (Node Version Manager) for a clean, user-level install:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
+
+Load it into your current shell:
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
+```
+
+Then install Node.js (latest LTS):
+
+```bash
+nvm install --lts
+```
 
 ---
 
@@ -52,13 +75,28 @@ npx voidgates-watcher setup
 
 > ⚠️ If you've installed it globally and your system exposes global binaries, you may also be able to run `voidgates-watcher` instead of `npx voidgates-watcher`.
 
-To run continuously with `pm2`:
+---
+
+## 🔧 PM2 Setup (Recommended for Production)
+
+To keep the watcher running continuously and start it on boot:
 
 ```bash
+npm install -g pm2
 pm2 start $(which voidgates-watcher) --name voidgates
+pm2 startup
 ```
 
-### 🛠 Example `.env` Configuration
+👉 Run the command it prints (usually starting with `sudo env PATH=...`)
+Then save your process list:
+
+```bash
+pm2 save
+```
+
+---
+
+## 🛠 Example `.env` Configuration
 
 ```env
 # Cloudflare API Token must include the following permissions:
@@ -174,56 +212,6 @@ Blocked IPs are tagged with a timestamp note for cleanup:
 ```
 VoidGates 404 Abuse - 2025-07-09T15:32:00Z
 VoidGates Path Abuse - 2025-07-09T15:32:00Z
-```
-
----
-
-## 🔧 PM2 & Node Setup (Recommended for Production)
-
-### Step 1: Install NVM (Node Version Manager)
-
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-```
-
-### Step 2: Load NVM into current shell
-
-```bash
-export NVM_DIR="$HOME/.nvm"
-source "$NVM_DIR/nvm.sh"
-```
-
-### Step 3: Install latest LTS version of Node.js (includes npm)
-
-```bash
-nvm install --lts
-```
-
-### Step 4: Install PM2 globally using npm
-
-```bash
-npm install -g pm2
-```
-
-### Step 5: Start your app with PM2
-
-```bash
-pm2 start $(which voidgates-watcher) --name voidgates
-```
-
-### Step 6: Enable PM2 to start on system boot
-
-```bash
-pm2 startup
-```
-
-👉 Run the `sudo` command that it prints, e.g.: sudo env PATH=$PATH:/home/bitnami/.nvm/versions/node/vXX.X.X/bin pm2 startup systemd -u bitnami --hp /home/bitnami
-
-
-### Step 7: Save your PM2 process list
-
-```bash
-pm2 save
 ```
 
 ---
