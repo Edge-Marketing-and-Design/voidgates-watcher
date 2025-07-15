@@ -1,6 +1,6 @@
 {
   "name": "@edgedev/voidgates-watcher",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "Watches access logs and blocks abusive IPs via Cloudflare",
   "bin": {
     "voidgates-watcher": "bin/voidgates-watcher.js"
