@@ -49,6 +49,8 @@ function parseEnvWithComments(filePath) {
     },
   ])
 
+  const defaultWhitelistPath = path.join(path.dirname(targetPath), 'voidgates_whitelist.txt')
+
   const sections = parseEnvWithComments(examplePath)
 
   const responses = {}
@@ -64,11 +66,17 @@ function parseEnvWithComments(filePath) {
         type: 'input',
         name: 'value',
         message,
-        default: defaultValue,
+        default: key === 'WHITELIST_PATH' ? defaultWhitelistPath : defaultValue,
       },
     ])
 
     responses[key] = value
+  }
+
+  const whitelistPath = responses['WHITELIST_PATH']
+  if (whitelistPath && !fs.existsSync(whitelistPath)) {
+    fs.writeFileSync(whitelistPath, '')
+    console.log(`[INFO] Created blank whitelist file at ${whitelistPath}`)
   }
 
   // Generate the final .env content with comments preserved
